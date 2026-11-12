@@ -7,6 +7,7 @@ const authRoutes = Router();
 
 authRoutes.post('/register', (req, res) => authController.register(req, res));
 authRoutes.post('/login', (req, res) => authController.login(req, res));
+authRoutes.post('/logout', (req, res) => authController.logout(req, res));
 
 //Rota protegida
 authRoutes.get('/me', authMiddleware, async (req, res) => {

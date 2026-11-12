@@ -3,16 +3,22 @@ import cors from 'cors';
 import { prisma } from './shared/prisma.js';
 import cryptoRoutes from './modules/cryptos/crypto.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+
 app.use(express.json());
+app.use(cookieParser()); 
+app.use(express.static('public'));
 
 app.use('/api/cryptos', cryptoRoutes);
 app.use('/api/auth', authRoutes);
 
-app.use(express.static('public'));
 
 //Rota de teste
 app.get('/health', async (req, res) => {

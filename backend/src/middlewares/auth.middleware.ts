@@ -17,19 +17,12 @@ declare global {
 }
 
 export function authMiddleware( req: Request, res: Response, next: NextFunction){
-    const authHeader = req.headers.authorization;
+    let token = req.cookies?.token;
 
-    if(!authHeader){
-        res.status(401).json({ error: 'Token não fornecido' });
+    if(!token){
+        res.status(401).json({ error: 'Não autenticado '});
         return;
     }
-
-    const parts = authHeader.split(' ');
-    if(parts.length !== 2 || parts[0] !== 'Bearer'){
-        res.status(401).json({ error: 'Formato de token inválido '});
-    }
-
-    const token = parts[1];
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
