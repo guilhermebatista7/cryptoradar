@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste WebSocket - CryptoRadar</title>
+  <style>
+    body { font-family: monospace; background: #0f172a; color: #f8fafc; padding: 24px; }
+    .card { background: #1e293b; padding: 16px; border-radius: 8px; margin-bottom: 12px; width: 320px; }
+    .price { font-size: 24px; font-weight: bold; color: #38bdf8; }
+    .up { color: #4ade80; }
+    .down { color: #f87171; }
+  </style>
+  <!-- Carrega a biblioteca cliente do Socket.IO servida pelo nosso backend -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>⚡ CryptoRadar - Stream ao Vivo</h1>
+  <p id="status">Conectando...</p>
+
+  <div id="tickers"></div>
+
+  <script>
+    const socket = io('http://localhost:3001');
+    const statusEl = document.getElementById('status');
+    const tickersEl = document.getElementById('tickers');
+    const prices = {};
+
+    socket.on('connect', () => {
+      statusEl.innerText = '🟢 Conectado ao servidor Socket.IO!';
+      statusEl.style.color = '#4ade80';
+    });
+
+    socket.on('crypto:ticker', (data) => {
+      let card = document.getElementById(data.symbol);
+      const prevPrice = prices[data.symbol] || data.price;
+      const colorClass = data.price > prevPrice ? 'up' : data.price < prevPrice ? 'down' : '';
+      prices[data.symbol] = data.price;
+
+      if (!card) {
+        card = document.createElement('div');
+        card.id = data.symbol;
+        card.className = 'card';
+        tickersEl.appendChild(card);
+      }
+
+      card.innerHTML = `
+        <h3>${data.symbol}</h3>
+        <div class="price ${colorClass}">$ ${data.price.toFixed(2)}</div>
+        <small>Máx 24h: $${data.high24h.toFixed(2)} | Mín 24h: $${data.low24h.toFixed(2)}</small>
+      `;
+    });
+  </script>
+</body>
+</html>

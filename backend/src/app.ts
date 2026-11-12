@@ -10,7 +10,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/cryptos', cryptoRoutes);
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+
+app.use(express.static('public'));
 
 //Rota de teste
 app.get('/health', async (req, res) => {
