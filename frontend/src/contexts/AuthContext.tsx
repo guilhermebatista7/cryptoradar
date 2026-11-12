@@ -3,7 +3,7 @@ import { api } from "../services/api";
 
 export interface User{
     id: string;
-    nome: string;
+    name: string;
     email: string;
 }
 
@@ -60,5 +60,5 @@ export function AuthProvider( { children }: { children: ReactNode }){
 }
 
 export function useAuth(){
-    return useContext(AuthContext)
+    return useContext(AuthContext);
 }
